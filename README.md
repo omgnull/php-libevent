@@ -39,7 +39,7 @@ exmple signal listener:
 
       // Map the signals
       $event
-          ->prepare($signal, (EV_SIGNAL | EV_PERSIST), array($this, 'test'), array($signal))
+          ->prepare($signal, (EV_SIGNAL | EV_PERSIST), array($handler, 'test'), array($signal))
           ->enable()
       ;
     }
