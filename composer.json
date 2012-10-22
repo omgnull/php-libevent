@@ -1,0 +1,13 @@
+{
+    "name": "onqu/php-libevent",
+    "description": "OOP wrapper for pecl libevent library http://pecl.php.net/package/libevent for php console applications",
+    "keywords": ["posix", "pcntl", "libevent"],
+    "type": "php libevent library wrapper",
+    "require": {
+        "php": ">=5.3"
+    },
+    "autoload": {
+        "psr-0": { "onqu\\php-libevent": "" }
+    },
+    "target-dir": "onqu\\php-libevent"
+}
