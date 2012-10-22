@@ -1,6 +1,6 @@
 <?php
 
-namespace Libevent\Event;
+namespace Libevent;
 
 /**
  * LibEventBase resourse wrapper

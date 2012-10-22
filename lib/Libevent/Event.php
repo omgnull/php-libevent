@@ -1,6 +1,6 @@
 <?php
 
-namespace Libevent\Event;
+namespace Libevent;
 
 /**
  * Libevent php-oop wrapper for simple event
@@ -31,6 +31,11 @@ class Event
      * @var callable
      */
     protected $callback;
+
+    /**
+     * @var array
+     */
+    protected $arguments;
 
     /**
      * Event timeout
@@ -177,6 +182,8 @@ class Event
         if (false === event_base_set($this->resource, $this->base->getResource())) {
             throw new EventException(sprintf('Could not set event "%s" base (event_base_set)', $this->name));
         }
+        $this->callback = $callback;
+        $this->arguments = $arg;
         $this->base->registerEvent($this);
 
 		return $this;
@@ -229,5 +236,20 @@ class Event
         }
 
         return $status;
+    }
+
+    /**
+     * Manualy invoke the event callback
+     *
+     * @return bool
+     */
+    public function invoke()
+    {
+        if (!is_callable($this->callback)) {
+            return false;
+        }
+        call_user_func($this->callback, $this->arguments);
+
+        return true;
     }
 }
