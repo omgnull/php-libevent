@@ -1,16 +1,26 @@
 <?php
 
-namespace Libevent;
-
-
 /**
- * Class EventBuffer
+ * PHP-OOP wrapper for libevent functionality
  *
- * Constants EVBUFFER_READ, EVBUFFER_WRITE, EVBUFFER_EOF, EVBUFFER_ERROR, EVBUFFER_TIMEOUT
+ * @author Igor Makarov <doomsmile@gmail.com>
+ *
  * @link http://www.wangafu.net/~nickm/libevent-book/
- * @link http://www.php.net/manual/en/book.libevent.php
+ * @link http://php.net/manual/en/ref.libevent.php
+ * @link http://pecl.php.net/package/libevent
  *
  * @uses libevent
+ */
+
+namespace Libevent\Event;
+
+use Libevent\Exception\EventException;
+use Libevent\Base\EventBaseInterface;
+
+/**
+ * Creates buffered event
+ *
+ * Constants EVBUFFER_READ, EVBUFFER_WRITE, EVBUFFER_EOF, EVBUFFER_ERROR, EVBUFFER_TIMEOUT
  */
 class EventBuffer
     extends AbstractEvent
@@ -39,22 +49,6 @@ class EventBuffer
      * @var resource
      */
     protected $resource;
-
-    /**
-     * @param string $name
-     * @param EventBaseInterface $base
-     *
-     * @throws EventException
-     */
-    public function __construct($name, EventBaseInterface $base)
-	{
-        if ($base->exists($name)) {
-            throw new EventException(sprintf('Can\'t create new buffered event. Event with same name "%s" already exists.'));
-        }
-
-        $this->name = $name;
-        $this->base = $base;
-	}
 
     /**
      * Creates a new buffered event resource.
@@ -86,7 +80,6 @@ class EventBuffer
 
         return $this;
     }
-
 
 	/**
 	 * Disables buffered event
@@ -235,7 +228,6 @@ class EventBuffer
 
 		return $this;
 	}
-
 
 	/**
 	 * Sets the read and write timeouts for the specified buffered event.

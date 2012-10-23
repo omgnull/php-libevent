@@ -1,13 +1,24 @@
 <?php
 
-namespace Libevent;
-
 /**
- * LibEventBase resourse wrapper
+ * PHP-OOP wrapper for libevent functionality
+ *
+ * @author Igor Makarov <doomsmile@gmail.com>
  *
  * @link http://www.wangafu.net/~nickm/libevent-book/
- * @uses libevent
+ * @link http://php.net/manual/en/ref.libevent.php
+ * @link http://pecl.php.net/package/libevent
  *
+ * @uses libevent
+ */
+
+namespace Libevent\Base;
+
+use Libevent\Exception\EventException;
+use Libevent\Event\LibeventEventInterface;
+
+/**
+ * EventBase resourse wrapper
  */
 class EventBase
     implements EventBaseInterface
@@ -63,7 +74,7 @@ class EventBase
 	public function __destruct()
 	{
         /**
-         * @var EventInterface $event
+         * @var LibeventEventInterface $event
          */
         foreach ($this->events as $event) {
             $event->free();
@@ -191,11 +202,11 @@ class EventBase
     /**
      * Add event to collection
      *
-     * @param EventInterface $event
+     * @param LibeventEventInterface $event
      *
      * @return bool
      */
-    public function registerEvent(EventInterface $event)
+    public function registerEvent(LibeventEventInterface $event)
     {
         $name = $event->getName();
         if ($this->exists($name)) {
@@ -210,13 +221,13 @@ class EventBase
     /**
      * Remove event from collection
      *
-     * @param string|EventInterface $event
+     * @param string|LibeventEventInterface $event
      *
      * @return bool
      */
     public function removeEvent($event)
     {
-        $name = $event instanceof EventInterface ? $event->getName() : $event;
+        $name = $event instanceof LibeventEventInterface ? $event->getName() : $event;
 
         if ($this->exists($name)) {
             return false;
