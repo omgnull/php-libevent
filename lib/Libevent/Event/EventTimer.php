@@ -42,20 +42,20 @@ class EventTimer
      *
      * @return bool
      */
-	public function enable($events = null)
-	{
+    public function enable($events = null)
+    {
         if ($this->enabled || !$this->check()) {
             return false;
         }
 
         if (false === event_timer_add($this->resource, $this->timeout)) {
-			throw new EventException(sprintf('Can\'t add timer event (event_timer_add)', $this->name));
-		}
+            throw new EventException(sprintf('Can\'t add timer event (event_timer_add)', $this->name));
+        }
 
         $this->enabled = true;
 
         return true;
-	}
+    }
 
     /**
      * Destroys the event and frees all the resources associated.
@@ -64,17 +64,17 @@ class EventTimer
      *
      * @return void
      */
-	public function free()
-	{
-		if ($this->check()) {
+    public function free()
+    {
+        if ($this->check()) {
             if ($this->enabled) {
                 $this->remove();
             }
 
-			event_free($this->resource);
-			$this->resource = null;
-		}
-	}
+            event_free($this->resource);
+            $this->resource = null;
+        }
+    }
 
     /**
      * Prepares the event to be used
@@ -93,9 +93,9 @@ class EventTimer
      *
      * @return Event
      */
-	public function prepare($callback, array $arguments = array(), $persist = false)
-	{
-		if ($this->enabled) {
+    public function prepare($callback, array $arguments = array(), $persist = false)
+    {
+        if ($this->enabled) {
             $this->disable();
         }
 
@@ -109,8 +109,8 @@ class EventTimer
             throw new EventException(sprintf('Could not set event "%s" base (event_base_set)', $this->name));
         }
 
-		return $this;
-	}
+        return $this;
+    }
 
     /**
      * Fire on timer event and invoke stored callback

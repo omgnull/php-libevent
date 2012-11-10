@@ -26,14 +26,14 @@ class EventBase
     /**
      * Default priority
      */
-	const DEFAULT_PRIORITY = 30;
+    const DEFAULT_PRIORITY = 30;
 
     /**
      * Event base resource
      *
      * @var resource
      */
-	private $resource;
+    private $resource;
 
     /**
      * Registered events
@@ -50,14 +50,14 @@ class EventBase
      * @param int $priority
      * @throws EventException
      */
-	public function __construct($priority = self::DEFAULT_PRIORITY)
-	{
-		if (false === $this->resource = event_base_new()) {
-			throw new EventException('Could not create event base resourse.');
-		}
+    public function __construct($priority = self::DEFAULT_PRIORITY)
+    {
+        if (false === $this->resource = event_base_new()) {
+            throw new EventException('Could not create event base resourse.');
+        }
 
         $this->setPriority((int)$priority);
-	}
+    }
 
     /**
      * Destroys the specified event base and all the events associated.
@@ -71,8 +71,8 @@ class EventBase
      *
      * @return void
      */
-	public function __destruct()
-	{
+    public function __destruct()
+    {
         /**
          * @var EventInterface $event
          */
@@ -81,7 +81,7 @@ class EventBase
         }
 
         $this->free();
-	}
+    }
 
     /**
      * @return resource
@@ -115,14 +115,14 @@ class EventBase
      *
      * @return int Returns 0 on success, -1 on error and 1 if no events were registered
      */
-	public function loop($flags = 0)
-	{
+    public function loop($flags = 0)
+    {
         if (-1 === ($status = event_base_loop($this->resource, $flags))) {
-			throw new EventException('Can\'t start base loop (event_base_loop)');
-		}
+            throw new EventException('Can\'t start base loop (event_base_loop)');
+        }
 
-		return $status;
-	}
+        return $status;
+    }
 
     /**
      * Abort the active event loop immediately. The behaviour is similar to break statement.
@@ -133,14 +133,14 @@ class EventBase
      *
      * @return EventBaseInterface
      */
-	public function loopBreak()
-	{
-		if (false === event_base_loopbreak($this->resource)) {
-			throw new EventException('Can\'t break loop (event_base_loopbreak)');
-		}
+    public function loopBreak()
+    {
+        if (false === event_base_loopbreak($this->resource)) {
+            throw new EventException('Can\'t break loop (event_base_loopbreak)');
+        }
 
-		return $this;
-	}
+        return $this;
+    }
 
     /**
      * Exit loop after a time.
@@ -155,14 +155,14 @@ class EventBase
      *
      * @return EventBaseInterface
      */
-	public function loopExit($timeout = -1)
-	{
-		if (false === event_base_loopexit($this->resource, $timeout)) {
-			throw new EventException('Could not set loop exit timeout.');
-		}
+    public function loopExit($timeout = -1)
+    {
+        if (false === event_base_loopexit($this->resource, $timeout)) {
+            throw new EventException('Could not set loop exit timeout.');
+        }
 
-		return $this;
-	}
+        return $this;
+    }
 
     /**
      * Sets the maximum priority level of the event base.
@@ -175,16 +175,16 @@ class EventBase
      *
      * @return EventBaseInterface
      */
-	public function setPriority($priority)
-	{
-		if (false === event_base_priority_init($this->resource, $priority)) {
-			throw new EventException(sprintf(
+    public function setPriority($priority)
+    {
+        if (false === event_base_priority_init($this->resource, $priority)) {
+            throw new EventException(sprintf(
                 'Can\'t set the maximum priority level of the event base to %s (event_base_priority_init)', $priority
             ));
-		}
+        }
 
-		return $this;
-	}
+        return $this;
+    }
 
     /**
      * Free the base resource

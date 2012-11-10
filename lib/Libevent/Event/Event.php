@@ -171,29 +171,29 @@ class Event implements EventInterface
         return true;
     }
 
-	/**
-	 * Adds an event to the set of monitored events.
+    /**
+     * Adds an event to the set of monitored events.
      *
-	 * @see event_add
-	 * @link http://www.php.net/manual/en/function.event-add.php
+     * @see event_add
+     * @link http://www.php.net/manual/en/function.event-add.php
      *
-	 * @throws EventException if can't add event
-	 *
-	 * @return Event
-	 */
-	public function enable()
-	{
+     * @throws EventException if can't add event
+     *
+     * @return Event
+     */
+    public function enable()
+    {
         if ($this->enabled || !$this->check()) {
             return false;
         }
 
         if (false === event_add($this->resource, $this->timeout)) {
-			throw new EventException(sprintf('Can\'t add event "%s" (event_add)', $this->name));
-		}
+            throw new EventException(sprintf('Can\'t add event "%s" (event_add)', $this->name));
+        }
         $this->enabled = true;
 
-		return $this;
-	}
+        return $this;
+    }
 
     /**
      * Set event timeout in microseconds
@@ -209,24 +209,24 @@ class Event implements EventInterface
         return $this;
     }
 
-	/**
-	 * Destroys the event and frees all the resources associated.
-	 *
-	 * @see event_free
-	 *
-	 * @return void
-	 */
-	public function free()
-	{
-		if ($this->check()) {
+    /**
+     * Destroys the event and frees all the resources associated.
+     *
+     * @see event_free
+     *
+     * @return void
+     */
+    public function free()
+    {
+        if ($this->check()) {
             if ($this->enabled) {
                 $this->remove();
             }
 
-			event_free($this->resource);
-			$this->resource = null;
-		}
-	}
+            event_free($this->resource);
+            $this->resource = null;
+        }
+    }
 
     /**
      * Prepares the event to be used
@@ -249,15 +249,15 @@ class Event implements EventInterface
      *
      * @return Event
      */
-	public function prepare($fd, $events, $callback, array $arguments = array())
-	{
-		if ($this->enabled) {
+    public function prepare($fd, $events, $callback, array $arguments = array())
+    {
+        if ($this->enabled) {
             $this->disable();
         }
 
         if (!event_set($this->resource, $fd, $events, $callback, $this)) {
-			throw new EventException(sprintf('Can\'t prepare event (event_set)', $this->name));
-		}
+            throw new EventException(sprintf('Can\'t prepare event (event_set)', $this->name));
+        }
 
         if (false === event_base_set($this->resource, $this->base->getResource())) {
             throw new EventException(sprintf('Could not set event "%s" base (event_base_set)', $this->name));
@@ -267,8 +267,8 @@ class Event implements EventInterface
         $this->arguments = $arguments;
         $this->base->registerEvent($this);
 
-		return $this;
-	}
+        return $this;
+    }
 
     /**
      * Creates event resource

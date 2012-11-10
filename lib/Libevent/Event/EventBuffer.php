@@ -32,13 +32,13 @@ class EventBuffer
     /**
      * Watermarks
      */
-	const DEFAULT_LOWMARK           = 1;
-	const DEFAULT_HIGHMARK          = 0xffffff;
+    const DEFAULT_LOWMARK           = 1;
+    const DEFAULT_HIGHMARK          = 0xffffff;
 
     /**
      * @var resource
      */
-	protected $stream;
+    protected $stream;
 
     /**
      * @var EventBaseInterface
@@ -92,18 +92,18 @@ class EventBuffer
      *
      * @return EventBuffer
      */
-	public function disable($events = null)
-	{
-		if (null === $events) {
+    public function disable($events = null)
+    {
+        if (null === $events) {
             throw new EventException("Events to disable must be specified. Any combination of EV_READ and EV_WRITE (event_buffer_disable)", 1);
         }
 
         if (!event_buffer_disable($this->resource, $events)) {
-			throw new EventException("Can't disable buffered event (event_buffer_disable)", 1);
-		}
+            throw new EventException("Can't disable buffered event (event_buffer_disable)", 1);
+        }
         
-		return $this;
-	}
+        return $this;
+    }
 
     /**
      * Enables buffered event
@@ -116,18 +116,18 @@ class EventBuffer
      *
      * @return EventBuffer
      */
-	public function enable($events = null)
-	{
+    public function enable($events = null)
+    {
         if (null === $events) {
             throw new EventException("Events to enable must be specified. Any combination of EV_READ and EV_WRITE (event_buffer_disable)", 1);
         }
 
         if (!event_buffer_enable($this->resource, $events)) {
-			throw new EventException("Can't enable buffered event (event_buffer_enable)", 1);
-		}
+            throw new EventException("Can't enable buffered event (event_buffer_enable)", 1);
+        }
 
-		return $this;
-	}
+        return $this;
+    }
 
     /**
      * Destroys the buffered event and frees all the resources associated.
@@ -139,15 +139,15 @@ class EventBuffer
      *
      * @return EventBuffer
      */
-	public function free()
-	{
-		if ($this->resource) {
-			event_buffer_free($this->resource);
-			$this->resource = null;
-		}
+    public function free()
+    {
+        if ($this->resource) {
+            event_buffer_free($this->resource);
+            $this->resource = null;
+        }
 
-		return $this;
-	}
+        return $this;
+    }
 
 
     /**
@@ -159,10 +159,10 @@ class EventBuffer
      *
      * @return string|bool Data from buffer or FALSE
      */
-	public function read($dataSize)
-	{
-		return event_buffer_read($this->resource, $dataSize);
-	}
+    public function read($dataSize)
+    {
+        return event_buffer_read($this->resource, $dataSize);
+    }
 
     /**
      * Writes data to the specified buffered event.
@@ -176,13 +176,13 @@ class EventBuffer
      *
      * @return EventBuffer
      */
-	public function write($data, $dataSize = -1)
-	{
-		if (!event_buffer_write($this->resource, $data, $dataSize)) {
-			throw new EventException('Can\'t write data to the buffered event (event_buffer_write)', 1);
-		}
-		return $this;
-	}
+    public function write($data, $dataSize = -1)
+    {
+        if (!event_buffer_write($this->resource, $data, $dataSize)) {
+            throw new EventException('Can\'t write data to the buffered event (event_buffer_write)', 1);
+        }
+        return $this;
+    }
 
 
     /**
@@ -196,13 +196,13 @@ class EventBuffer
      *
      * @return EventBuffer
      */
-	public function setStream($stream)
-	{
+    public function setStream($stream)
+    {
         event_buffer_fd_set($this->resource, $stream);
-		$this->stream = $stream;
+        $this->stream = $stream;
 
-		return $this;
-	}
+        return $this;
+    }
 
     /**
      * Sets or changes existing callbacks for the buffered event.
@@ -229,14 +229,14 @@ class EventBuffer
      *
      * @return EventBuffer
      */
-	public function setCallback($readcb, $writecb, $errorcb, $arg = null)
-	{
-		if (!event_buffer_set_callback($this->resource, $readcb, $writecb, $errorcb, array($this, $arg))) {
-			throw new EventException("Can't set buffered event callbacks (event_buffer_set_callback)", 1);
-		}
+    public function setCallback($readcb, $writecb, $errorcb, $arg = null)
+    {
+        if (!event_buffer_set_callback($this->resource, $readcb, $writecb, $errorcb, array($this, $arg))) {
+            throw new EventException("Can't set buffered event callbacks (event_buffer_set_callback)", 1);
+        }
 
-		return $this;
-	}
+        return $this;
+    }
 
     /**
      * Sets the read and write timeouts for the specified buffered event.
@@ -250,12 +250,12 @@ class EventBuffer
      *
      * @return EventBuffer
      */
-	public function setTimout($read_timeout = self::DEFAULT_TIMEOUT_READ, $write_timeout = self::DEFAULT_TIMEOUT_WRITE)
-	{
-		event_buffer_timeout_set($this->resource, $read_timeout, $write_timeout);
+    public function setTimout($read_timeout = self::DEFAULT_TIMEOUT_READ, $write_timeout = self::DEFAULT_TIMEOUT_WRITE)
+    {
+        event_buffer_timeout_set($this->resource, $read_timeout, $write_timeout);
 
-		return $this;
-	}
+        return $this;
+    }
 
     /**
      * Set the marks for read and write events.
@@ -275,12 +275,12 @@ class EventBuffer
      *
      * @return EventBuffer
      */
-	public function setWatermark($events, $lowmark = self::DEFAULT_LOWMARK, $highmark = self::DEFAULT_HIGHMARK)
-	{
-		event_buffer_watermark_set($this->resource, $events, $lowmark, $highmark);
+    public function setWatermark($events, $lowmark = self::DEFAULT_LOWMARK, $highmark = self::DEFAULT_HIGHMARK)
+    {
+        event_buffer_watermark_set($this->resource, $events, $lowmark, $highmark);
 
-		return $this;
-	}
+        return $this;
+    }
 
     /**
      * Assign a priority to a buffered event.
@@ -296,12 +296,12 @@ class EventBuffer
      *
      * @return EventBuffer
      */
-	public function setPriority($value = self::DEFAULT_PRIORITY)
-	{
-		if (!event_buffer_priority_set($this->resource, $value)) {
-			throw new EventException("Can't set buffered event priority to $value (event_buffer_priority_set)", 1);
-		}
+    public function setPriority($value = self::DEFAULT_PRIORITY)
+    {
+        if (!event_buffer_priority_set($this->resource, $value)) {
+            throw new EventException("Can't set buffered event priority to $value (event_buffer_priority_set)", 1);
+        }
 
-		return $this;
-	}
+        return $this;
+    }
 }
