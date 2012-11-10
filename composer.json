@@ -4,7 +4,8 @@
     "keywords": ["posix", "pcntl", "libevent", "event", "fork", "buffer", "signal"],
     "type": "library",
     "require": {
-        "php": ">=5.3"
+        "php": ">=5.3",
+        "ext-libevent": "*"
     },
     "authors": [
         {
