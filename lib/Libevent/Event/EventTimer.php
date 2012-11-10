@@ -21,15 +21,8 @@ use Libevent\Base\EventBaseInterface;
  * Creates timed event
  */
 class EventTimer
-    extends AbstractEvent
+    extends Event
 {
-    /**
-     * Event timeout in microseconds
-     *
-     * @var integer
-     */
-    protected $timeout = -1;
-
     /**
      * Event persistent
      *
@@ -45,19 +38,21 @@ class EventTimer
      *
 	 * @throws EventException
 	 *
-	 * @return void
+	 * @return bool
 	 */
 	public function enable()
 	{
         if ($this->enabled || !$this->check()) {
-            return;
+            return false;
         }
 
         if (false === event_timer_add($this->resource, $this->timeout)) {
-			throw new EventException(sprintf('Can\'t add event (event_timer_add)', $this->name));
+			throw new EventException(sprintf('Can\'t add timer event (event_timer_add)', $this->name));
 		}
 
         $this->enabled = true;
+
+        return true;
 	}
 
 	/**
@@ -65,7 +60,7 @@ class EventTimer
 	 *
 	 * @see event_free
 	 *
-	 * @return Event
+	 * @return void
 	 */
 	public function free()
 	{
@@ -118,7 +113,7 @@ class EventTimer
     public function onTimer()
     {
         if (!$this->enabled) {
-            throw new EventException(sprintf('Could not set event "%s" base (event_base_set)', $this->name));
+            throw new EventException(sprintf('Could not fire timer event "%s". Event is disabled', $this->name));
         }
 
         if ($this->invoke() && true === $this->persist) {

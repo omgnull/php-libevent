@@ -15,7 +15,7 @@
 namespace Libevent\Base;
 
 use Libevent\Exception\EventException;
-use Libevent\Event\LibeventEventInterface;
+use Libevent\Event\EventInterface;
 
 /**
  * EventBase resourse wrapper
@@ -74,7 +74,7 @@ class EventBase
 	public function __destruct()
 	{
         /**
-         * @var LibeventEventInterface $event
+         * @var EventInterface $event
          */
         foreach ($this->events as $event) {
             $event->free();
@@ -202,11 +202,11 @@ class EventBase
     /**
      * Add event to collection
      *
-     * @param LibeventEventInterface $event
+     * @param EventInterface $event
      *
      * @return bool
      */
-    public function registerEvent(LibeventEventInterface $event)
+    public function registerEvent(EventInterface $event)
     {
         $name = $event->getName();
         if ($this->exists($name)) {
@@ -221,13 +221,13 @@ class EventBase
     /**
      * Remove event from collection
      *
-     * @param string|LibeventEventInterface $event
+     * @param string|EventInterface $event
      *
      * @return bool
      */
     public function removeEvent($event)
     {
-        $name = $event instanceof LibeventEventInterface ? $event->getName() : $event;
+        $name = $event instanceof EventInterface ? $event->getName() : $event;
 
         if ($this->exists($name)) {
             return false;

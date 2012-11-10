@@ -16,15 +16,15 @@
  * Example signal event
  */
 
-require_once __DIR__ . '/../lib/include.php';
+require_once 'include.php';
 
-use Libevent\Event\LibeventEventInterface;
 use Libevent\Base\EventBase;
+use Libevent\Event\EventInterface;
 use Libevent\Event\Event;
 
 class SimpleEventHandler
 {
-    public function handleSigterm(LibeventEventInterface $event)
+    public function simple_sigterm_event(EventInterface $event)
     {
         echo sprintf("This is a simple sigterm event handler. Ivoked by %s \n", $event->getName());
         echo "<----- arguments ----->";
@@ -33,7 +33,7 @@ class SimpleEventHandler
         exit();
     }
 
-    public function handleSigusr1(LibeventEventInterface $event)
+    public function simple_sigusr1_event(EventInterface $event)
     {
         echo sprintf("This is a simple sigterm event handler. Ivoked by %s \n", $event->getName());
     }
@@ -47,34 +47,33 @@ $base = new EventBase();
 
 // Create map of events
 $map = array(
-    SIGUSR1 => new Event($this->base, 'simple_sigusr1_event'),
-    SIGTERM => new Event($this->base, 'simple_sigterm_event'),
+    SIGUSR1 => 'simple_sigusr1_event',
+    SIGTERM => 'simple_sigterm_event',
 );
 
 /**
  * Prepare events and enable
  * @var Event $event
  */
-foreach ($map as $signal => $event) {
-    if (SIGURG === $signal) {
-        $event->prepare($signal, (EV_SIGNAL | EV_PERSIST), array($eventHandler, 'handleSigusr1'))->enable();
-        continue;
-    }
-
-    $event->prepare($signal, (EV_SIGNAL | EV_PERSIST), array($eventHandler, 'handleSigterm'), array('Terminated'))->enable();
+foreach ($map as $signal => $name) {
+    $event = new Event($base, $name);
+    $event
+        ->prepare($signal, (EV_SIGNAL | EV_PERSIST), array($eventHandler, $name), array($signal))
+        ->enable()
+    ;
 }
 
 // Base infinite loop
 while (true) {
-    // We set loop to non block
+    // Set loop to non block
     $base->loop(EVLOOP_NONBLOCK);
 
     // Sleep 3 seconds
     usleep(3000000);
 
     // Send SIGUSR1 signal
-    posix_kill(posix_getpid(), SIGUSR1);
+    // posix_kill(posix_getpid(), SIGUSR1);
 
-    // Send SIGTERM signal from other console window: killall event_signal.php
-    posix_kill(posix_getpid(), SIGTERM);
+    // Send SIGTERM signal
+    // posix_kill(posix_getpid(), SIGTERM);
 }

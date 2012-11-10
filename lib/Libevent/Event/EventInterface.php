@@ -20,23 +20,39 @@ use Libevent\Exception\EventException;
  * Interface EventInterface
  */
 interface EventInterface
-    extends LibeventEventInterface
 {
+    /**
+     * Gets the event name
+     *
+     * @return string
+     */
+    public function getName();
+
+    /**
+     * Gets the event arguments
+     * @return array
+     */
+    public function getArguments();
+
     /**
      * Disables event
      *
+     * @param null|integer $events
+     *
      * @return void
      */
-    public function disable();
+    public function disable($events = null);
 
     /**
      * Enables event
+     *
+     * @param null|integer $events
      *
      * @throws EventException
      *
      * @return void
      */
-    public function enable();
+    public function enable($events = null);
 
     /**
      * Manually invoke the event callback
@@ -44,4 +60,11 @@ interface EventInterface
      * @return bool
      */
     public function invoke();
+
+    /**
+     * Free event resource
+     *
+     * @return void
+     */
+    public function free();
 }

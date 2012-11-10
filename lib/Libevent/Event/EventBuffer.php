@@ -23,7 +23,7 @@ use Libevent\Base\EventBaseInterface;
  * Constants EVBUFFER_READ, EVBUFFER_WRITE, EVBUFFER_EOF, EVBUFFER_ERROR, EVBUFFER_TIMEOUT
  */
 class EventBuffer
-    extends AbstractEvent
+    extends Event
 {
     const DEFAULT_PRIORITY          = 10;
     const DEFAULT_TIMEOUT_READ      = 30;
@@ -92,9 +92,13 @@ class EventBuffer
 	 *
 	 * @return EventBuffer
 	 */
-	public function disable($events)
+	public function disable($events = null)
 	{
-		if (!event_buffer_disable($this->resource, $events)) {
+		if (null === $events) {
+            throw new EventException("Events to disable must be specified. Any combination of EV_READ and EV_WRITE (event_buffer_disable)", 1);
+        }
+
+        if (!event_buffer_disable($this->resource, $events)) {
 			throw new EventException("Can't disable buffered event (event_buffer_disable)", 1);
 		}
         
@@ -112,11 +116,16 @@ class EventBuffer
 	 *
 	 * @return EventBuffer
 	 */
-	public function enable($events)
+	public function enable($events = null)
 	{
-		if (!event_buffer_enable($this->resource, $events)) {
+        if (null === $events) {
+            throw new EventException("Events to enable must be specified. Any combination of EV_READ and EV_WRITE (event_buffer_disable)", 1);
+        }
+
+        if (!event_buffer_enable($this->resource, $events)) {
 			throw new EventException("Can't enable buffered event (event_buffer_enable)", 1);
 		}
+
 		return $this;
 	}
 
@@ -162,14 +171,14 @@ class EventBuffer
 	 *
 	 * @throws EventException
 	 *
-	 * @param string $data      The data to be written.
-	 * @param int    $data_size Optional size parameter. Writes all the data by default
+	 * @param string $data The data to be written.
+	 * @param integer $dataSize Optional size parameter. Writes all the data by default
 	 *
 	 * @return EventBuffer
 	 */
-	public function write($data, $data_size = -1)
+	public function write($data, $dataSize = -1)
 	{
-		if (!event_buffer_write($this->resource, $data, $data_size)) {
+		if (!event_buffer_write($this->resource, $data, $dataSize)) {
 			throw new EventException('Can\'t write data to the buffered event (event_buffer_write)', 1);
 		}
 		return $this;
