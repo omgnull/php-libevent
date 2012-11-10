@@ -23,33 +23,33 @@ use Libevent\Event\EventInterface;
 class EventBase
     implements EventBaseInterface
 {
-	/**
-	 * Default priority
-	 */
+    /**
+     * Default priority
+     */
 	const DEFAULT_PRIORITY = 30;
 
-	/**
-	 * Event base resource
-	 *
-	 * @var resource
-	 */
+    /**
+     * Event base resource
+     *
+     * @var resource
+     */
 	private $resource;
 
-	/**
-	 * Timers
-	 *
-	 * @var array[]
-	 */
+    /**
+     * Registered events
+     *
+     * @var array
+     */
     private $events = array();
 
-	/**
-	 * Construct new event base
-	 *
-	 * @see event_base_new
+    /**
+     * Construct new event base
+     *
+     * @see event_base_new
      * @link http://www.php.net/manual/function.event-base-new.php
      * @param int $priority
-	 * @throws EventException
-	 */
+     * @throws EventException
+     */
 	public function __construct($priority = self::DEFAULT_PRIORITY)
 	{
 		if (false === $this->resource = event_base_new()) {
@@ -59,8 +59,8 @@ class EventBase
         $this->setPriority((int)$priority);
 	}
 
-	/**
-	 * Destroys the specified event base and all the events associated.
+    /**
+     * Destroys the specified event base and all the events associated.
      * Empty collection
      *
      * @link http://www.php.net/manual/function.event-base-free.php
@@ -70,7 +70,7 @@ class EventBase
      * @see event_free
      *
      * @return void
-	 */
+     */
 	public function __destruct()
 	{
         /**
@@ -103,18 +103,18 @@ class EventBase
         return isset($this->events[$eventId]);
     }
 
-	/**
-	 * Starts event loop for the specified event base.
-	 *
-	 * @see event_base_loop
-	 * @link http://php.net/manual/function.event-base-loop.php
+    /**
+     * Starts event loop for the specified event base.
+     *
+     * @see event_base_loop
+     * @link http://php.net/manual/function.event-base-loop.php
      *
      * @param int $flags Optional parameter, which can take any combination of EVLOOP_ONCE and EVLOOP_NONBLOCK.
      *
-	 * @throws EventException if error
-	 *
-	 * @return int Returns 0 on success, -1 on error and 1 if no events were registered
-	 */
+     * @throws EventException if error
+     *
+     * @return int Returns 0 on success, -1 on error and 1 if no events were registered
+     */
 	public function loop($flags = 0)
 	{
         if (-1 === ($status = event_base_loop($this->resource, $flags))) {
@@ -124,15 +124,15 @@ class EventBase
 		return $status;
 	}
 
-	/**
-	 * Abort the active event loop immediately. The behaviour is similar to break statement.
-	 *
-	 * @see event_base_loopbreak
-	 *
-	 * @throws EventException
-	 *
-	 * @return EventBaseInterface
-	 */
+    /**
+     * Abort the active event loop immediately. The behaviour is similar to break statement.
+     *
+     * @see event_base_loopbreak
+     *
+     * @throws EventException
+     *
+     * @return EventBaseInterface
+     */
 	public function loopBreak()
 	{
 		if (false === event_base_loopbreak($this->resource)) {
@@ -142,19 +142,19 @@ class EventBase
 		return $this;
 	}
 
-	/**
-	 * Exit loop after a time.
+    /**
+     * Exit loop after a time.
      * The next event loop iteration after the given timer expires will
      * complete normally, then exit without blocking for events again.
-	 *
+     *
      * @link http://www.php.net/manual/function.event-base-loopexit.php
-	 * @see event_base_loopexit
-	 *
-	 * @param int $timeout Optional timeout parameter (in microseconds).
+     * @see event_base_loopexit
+     *
+     * @param int $timeout Optional timeout parameter (in microseconds).
      * @throws EventException
-	 *
-	 * @return EventBaseInterface
-	 */
+     *
+     * @return EventBaseInterface
+     */
 	public function loopExit($timeout = -1)
 	{
 		if (false === event_base_loopexit($this->resource, $timeout)) {
@@ -164,17 +164,17 @@ class EventBase
 		return $this;
 	}
 
-	/**
-	 * Sets the maximum priority level of the event base.
-	 *
-     * @link http://www.php.net/manual/function.event-base-priority-init.php
-	 * @see event_base_priority_init
+    /**
+     * Sets the maximum priority level of the event base.
      *
-	 * @param int $priority
+     * @link http://www.php.net/manual/function.event-base-priority-init.php
+     * @see event_base_priority_init
+     *
+     * @param int $priority
      * @throws EventException
-	 *
-	 * @return EventBaseInterface
-	 */
+     *
+     * @return EventBaseInterface
+     */
 	public function setPriority($priority)
 	{
 		if (false === event_base_priority_init($this->resource, $priority)) {

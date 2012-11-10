@@ -228,27 +228,27 @@ class Event implements EventInterface
 		}
 	}
 
-	/**
-	 * Prepares the event to be used
-	 *
-	 * @see event_set
+    /**
+     * Prepares the event to be used
+     *
+     * @see event_set
      * @link http://www.php.net/manual/en/function.event-set.php
      *
      * @see event_base_set
      * @link http://www.php.net/manual/en/function.event-base-set.php
      *
-	 * @param resource|mixed $fd Valid PHP stream resource. The stream must be castable to file descriptor,
+     * @param resource|mixed $fd Valid PHP stream resource. The stream must be castable to file descriptor,
      * so you most likely won't be able to use any of filtered streams.
-	 * @param int $events A set of flags indicating the desired event, can be EV_TIMEOUT, EV_READ, EV_WRITE and EV_SIGNAL.
+     * @param int $events A set of flags indicating the desired event, can be EV_TIMEOUT, EV_READ, EV_WRITE and EV_SIGNAL.
      * The additional flag EV_PERSIST makes the event to persist until {@link event_del}() is
      * called, otherwise the callback is invoked only once.
-	 * @param callable $callback Callback function to be called when the matching event occurs.
-	 * @param array $arguments
+     * @param callable $callback Callback function to be called when the matching event occurs.
+     * @param array $arguments
      *
      * @throws EventException
-	 *
-	 * @return Event
-	 */
+     *
+     * @return Event
+     */
 	public function prepare($fd, $events, $callback, array $arguments = array())
 	{
 		if ($this->enabled) {

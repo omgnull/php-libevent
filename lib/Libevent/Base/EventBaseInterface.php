@@ -35,6 +35,7 @@ interface EventBaseInterface
      * @return bool
      */
     public function exists($name);
+
     /**
      * Starts event loop for the specified event base.
      *

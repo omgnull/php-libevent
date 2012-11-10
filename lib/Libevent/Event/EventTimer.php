@@ -30,17 +30,19 @@ class EventTimer
      */
     protected $persist = false;
 
-	/**
-	 * Adds an event timer to the set of monitored events.
+    /**
+     * Adds an event timer to the set of monitored events.
      *
-	 * @see event_add
-	 * @link http://www.php.net/manual/en/function.event-add.php
+     * @see event_add
+     * @link http://www.php.net/manual/en/function.event-add.php
      *
-	 * @throws EventException
-	 *
-	 * @return bool
-	 */
-	public function enable()
+     * @param null $events Not used here
+     *
+     * @throws EventException
+     *
+     * @return bool
+     */
+	public function enable($events = null)
 	{
         if ($this->enabled || !$this->check()) {
             return false;
@@ -55,13 +57,13 @@ class EventTimer
         return true;
 	}
 
-	/**
-	 * Destroys the event and frees all the resources associated.
-	 *
-	 * @see event_free
-	 *
-	 * @return void
-	 */
+    /**
+     * Destroys the event and frees all the resources associated.
+     *
+     * @see event_free
+     *
+     * @return void
+     */
 	public function free()
 	{
 		if ($this->check()) {
@@ -74,23 +76,23 @@ class EventTimer
 		}
 	}
 
-	/**
-	 * Prepares the event to be used
-	 *
-	 * @see event_timer_set
+    /**
+     * Prepares the event to be used
+     *
+     * @see event_timer_set
      * @link undocumented function
      *
      * @see event_base_set
      * @link http://www.php.net/manual/en/function.event-base-set.php
      *
-	 * @param callable $callback Callback function to be called when the matching event occurs.
-	 * @param array $arguments
-	 * @param bool $persist
+     * @param callable $callback Callback function to be called when the matching event occurs.
+     * @param array $arguments
+     * @param bool $persist
      *
      * @throws EventException
-	 *
-	 * @return Event
-	 */
+     *
+     * @return Event
+     */
 	public function prepare($callback, array $arguments = array(), $persist = false)
 	{
 		if ($this->enabled) {
@@ -110,6 +112,11 @@ class EventTimer
 		return $this;
 	}
 
+    /**
+     * Fire on timer event and invoke stored callback
+     *
+     * @throws \Libevent\Exception\EventException
+     */
     public function onTimer()
     {
         if (!$this->enabled) {
