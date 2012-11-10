@@ -1,11 +1,19 @@
 {
-    "name": "onqu/php-libevent",
+    "name": "omgnull/php-libevent",
     "description": "OOP wrapper for pecl libevent library http://pecl.php.net/package/libevent for php console applications",
     "keywords": ["posix", "pcntl", "libevent"],
     "type": "php libevent library wrapper",
     "require": {
         "php": ">=5.3"
     },
+    "authors": [
+        {
+            "name": "Igor Makarov",
+            "email": "doomsmile@gmail.com",
+            "homepage": "http://omgnull.ru",
+            "role": "Developer"
+        }
+    ],
     "autoload": {
         "psr-0": {
             "Libevent": "lib"
