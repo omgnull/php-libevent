@@ -148,7 +148,7 @@ class Event implements EventInterface
      *
      * @return void
      */
-    public function disable()
+    public function disable($event = null)
     {
         if ($this->enabled) {
             $this->remove();
