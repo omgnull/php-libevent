@@ -1,11 +1,12 @@
 #!/bin/sh
 
-echo "start to buil libevent libs & headers\n"
+echo "\nstart to buil libevent libs & headers"
 sudo apt-get install libevent libevent-dev
+sudp pear upgrade
 
-echo "start installing libevent extension\n"
+echo "\nstart installing libevent extension"
 pecl install -f channel://pecl.php.net/libevent-0.0.5 --with-libevent
 echo "extension=libevent.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
 
-echo "start testing\n"
+echo "\nstart testing"
 phpunit --coverage-text
