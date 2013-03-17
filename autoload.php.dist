@@ -1,0 +1,3 @@
+<?php
+
+require_once 'example' . DIRECTORY_SEPARATOR . 'autoload.php';
