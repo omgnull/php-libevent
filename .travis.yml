@@ -9,5 +9,5 @@ matrix:
     allow_failures:
         - php: 5.5
 
-before_script:
-    - ./src/Libevent/Tests/run-travis.sh
+before_script: chmod + x ./src/Libevent/Tests/run-travis.sh
+script: ./src/Libevent/Tests/run-travis.sh

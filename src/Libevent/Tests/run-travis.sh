@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 sudo apt-get install libevent-1.4-2 libevent-dev
 pecl install channel://pecl.php.net/libevent-0.0.5
