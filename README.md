@@ -3,7 +3,7 @@ php-libevent
 
 https://github.com/onqu/php-libevent
 
-This is php OOP wrapper for pecl libevent library http://pecl.php.net/package/libevent, used in php console applications.
+This is php OOP wrapper for pecl libevent library http://pecl.php.net/package/libevent, used in php cli applications.
 
 Documentation page: http://pecl.php.net/package/libevent
 
@@ -15,6 +15,8 @@ Requirements:
  * pcntl extension (optional)
 
 TODO:
- * Buffer events
- * Tests
- * Examples
+- [x] Events
+- [x] Timer events
+- [ ] Buffer events
+- [ ] Tests
+- [ ] Examples (partially completed)
