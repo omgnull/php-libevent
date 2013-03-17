@@ -1,7 +1,7 @@
 php-libevent
 ============
 
-https://github.com/onqu/php-libevent
+[![Build Status](https://travis-ci.org/omgnull/php-libevent.png)](https://travis-ci.org/omgnull/php-libevent)
 
 This is php OOP wrapper for pecl libevent library http://pecl.php.net/package/libevent, used in php cli applications.
 Documentation page: http://pecl.php.net/package/libevent
