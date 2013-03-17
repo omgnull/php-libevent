@@ -16,7 +16,6 @@ Requirements:
  * php version >= 5.3.*
  * posix extension
  * libevent extension
- * posix extension
 
 
 TODO:
