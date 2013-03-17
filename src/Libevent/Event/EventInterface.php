@@ -15,6 +15,7 @@
 namespace Libevent\Event;
 
 use Libevent\Exception\EventException;
+use Libevent\Base\EventBaseInterface;
 
 /*
  * Interface EventInterface
@@ -27,6 +28,20 @@ interface EventInterface
      * @return string
      */
     public function getName();
+
+    /**
+     * Get event base
+     *
+     * @return EventBaseInterface
+     */
+    public function getBase();
+
+    /**
+     * Gets event timeout
+     *
+     * @return mixed
+     */
+    public function getTimeout();
 
     /**
      * Gets the event arguments
@@ -50,7 +65,7 @@ interface EventInterface
      *
      * @throws EventException
      *
-     * @return void
+     * @return bool
      */
     public function enable($events = null);
 
@@ -64,7 +79,16 @@ interface EventInterface
     /**
      * Free event resource
      *
+     * @param bool $baseCall
+     *
      * @return void
      */
-    public function free();
+    public function free($baseCall = false);
+
+    /**
+     * Checks for active event resource.
+     *
+     * @return bool
+     */
+    public function check();
 }
