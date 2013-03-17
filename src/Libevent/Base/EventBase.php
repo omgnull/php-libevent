@@ -42,6 +42,13 @@ class EventBase implements EventBaseInterface
     private $events = array();
 
     /**
+     * Stack of disabled events
+     *
+     * @var array
+     */
+    private $disabled = array();
+
+    /**
      * Construct new event base
      *
      * @see event_base_new
@@ -55,7 +62,7 @@ class EventBase implements EventBaseInterface
             throw $this->exception('Could not create event base resourse (event_base_new).');
         }
 
-        $this->setPriority((int)$priority);
+        $this->setPriority($priority);
     }
 
     /**
@@ -165,14 +172,18 @@ class EventBase implements EventBaseInterface
      * @see event_base_priority_init
      *
      * @param int $priority
-     * @throws EventException
+     * @throws EventException|\Exception
      *
      * @return EventBaseInterface
      */
     public function setPriority($priority)
     {
-        if (false === event_base_priority_init($this->resource, $priority)) {
-            throw $this->exception('Could not set the maximum priority level of the event base (event_base_priority_init)');
+        try {
+            if (false === event_base_priority_init($this->resource, $priority)) {
+                throw new \Exception('Could not set the maximum priority level of the event base (event_base_priority_init)');
+            }
+        } catch (\Exception $e) {
+            throw $this->exception($e->getMessage());
         }
 
         return $this;
@@ -213,6 +224,7 @@ class EventBase implements EventBaseInterface
             return false;
         }
         $this->events[$name] = $event;
+        $this->disabled[$name] = $event;
 
         return true;
     }
@@ -226,8 +238,7 @@ class EventBase implements EventBaseInterface
      */
     public function removeEvent($event)
     {
-        $name = $event instanceof EventInterface ?
-            $event->getName() : $event;
+        $name = $event instanceof EventInterface ? $event->getName() : $event;
 
         if (!$this->exists($name)) {
             return false;
@@ -235,6 +246,77 @@ class EventBase implements EventBaseInterface
         $this->freeEvent($name);
 
         return true;
+    }
+
+    /**
+     * Removes event from disabled stack and enable it
+     *
+     * @param string|EventInterface $event
+     * @param int $events Only for buffered event required
+     *
+     * @return bool
+     */
+    public function enableEvent($event, $events = null)
+    {
+        $name = $event instanceof EventInterface ? $event->getName() : $event;
+
+        if ($this->exists($name) && $this->isEventDisabled($name)) {
+            unset($this->disabled[$name]);
+            $this->events[$name]->enable($events);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Add event to disabled stack
+     * It may mey be removed manualy
+     *
+     * @param string|EventInterface $event
+     * @param int $events Required only for buffer event
+     *
+     * @return bool
+     */
+    public function disableEvent($event, $events = null)
+    {
+        $name = $event instanceof EventInterface ? $event->getName() : $event;
+
+        if ($this->exists($name) && !$this->isEventDisabled($name)) {
+            /**
+             * @var EventInterface $event
+             */
+            $event = $this->events[$name];
+            $this->disabled[$name] = $event;
+            $event->disable($events);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Check if event is disabled
+     *
+     * @param string $name
+     *
+     * @return bool
+     */
+    public function isEventDisabled($name)
+    {
+        return isset($this->disabled[$name]);
+    }
+
+    /**
+     * Return the array with disabled events
+     *
+     * @return array
+     */
+    public function getDisabledEvenets()
+    {
+        return $this->disabled;
     }
 
     /**
@@ -252,6 +334,10 @@ class EventBase implements EventBaseInterface
          * Force free the event, unset did not call __destruct if there are other links on event
         */
         $event = $this->events[$name];
+
+        if ($this->isEventDisabled($name)) {
+            unset($this->disabled[$name]);
+        }
 
         if ($event->check()) {
             $event->free($baseCall);

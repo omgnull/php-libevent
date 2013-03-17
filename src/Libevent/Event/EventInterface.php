@@ -53,10 +53,11 @@ interface EventInterface
      * Disables event
      *
      * @param null|integer $events
+     * @param bool $baseCall
      *
      * @return void
      */
-    public function disable($events = null);
+    public function disable($events = null, $baseCall = false);
 
     /**
      * Enables event

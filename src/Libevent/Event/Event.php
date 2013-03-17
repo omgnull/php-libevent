@@ -81,6 +81,13 @@ class Event implements EventInterface
     protected $timeout = -1;
 
     /**
+     * Event persistent
+     *
+     * @var bool
+     */
+    protected $persist = false;
+
+    /**
      * Creates a new event instance
      *
      * @param EventBaseInterface $base
@@ -157,13 +164,14 @@ class Event implements EventInterface
      * Disables event
      *
      * @param null $events For compatibility only, used in buffered event
+     * @param bool $baseCall To prevent loop
      *
      * @return void
      */
-    public function disable($events = null)
+    public function disable($events = null, $baseCall = false)
     {
         if ($this->enabled) {
-            $this->remove();
+            $this->remove($baseCall);
             $this->enabled = false;
         }
     }
@@ -177,10 +185,14 @@ class Event implements EventInterface
      */
     public function invoke()
     {
-        if (!is_callable($this->callback)) {
-            throw $this->exception('Could not invoke event. Invalid callback.');
+        if (!$this->enabled) {
+            throw $this->exception('Event is disabled.');
         }
         call_user_func($this->callback, $this);
+
+        if (!$this->persist) {
+            $this->disable();
+        }
     }
 
     /**
@@ -208,6 +220,7 @@ class Event implements EventInterface
         if (false === event_add($this->resource, $this->timeout)) {
             throw $this->exception('Could not add event (event_add).');
         }
+        $this->base->enableEvent($this->name);
         $this->enabled = true;
 
         return true;
@@ -255,7 +268,7 @@ class Event implements EventInterface
     {
         if ($this->check()) {
             if ($this->enabled) {
-                $this->remove();
+                $this->remove($baseCall);
             }
             event_free($this->resource);
             // Resource must be nulled before removeEvent to prevent infinite loop
@@ -287,7 +300,7 @@ class Event implements EventInterface
      * @param callable $callback Callback function to be called when the matching event occurs.
      * @param array $arguments
      *
-     * @throws EventException
+     * @throws EventException|\InvalidArgumentException
      *
      * @return Event
      */
@@ -297,8 +310,16 @@ class Event implements EventInterface
             $this->disable();
         }
 
+        if (!is_callable($callback)) {
+            throw new \InvalidArgumentException('Callback must be callable.');
+        }
+
         if (!event_set($this->resource, $fd, $events, array($this, 'invoke'), $this)) {
             throw $this->exception('Could not prepare event (event_set).');
+        }
+
+        if ($events & EV_PERSIST) {
+            $this->persist = true;
         }
 
         if (false === event_base_set($this->resource, $this->base->getResource())) {
@@ -338,14 +359,19 @@ class Event implements EventInterface
      *
      * @see event_del
      *
+     * @param bool $baseCall To prevent infinite loop
+     *
      * @throws EventException if can't delete event
      *
      * @return void
      */
-    protected function remove()
+    protected function remove($baseCall)
     {
         if (false === event_del($this->resource)) {
             throw $this->exception('Could not delete event (event_del).');
+        }
+        if (false === $baseCall) {
+            $this->base->disableEvent($this->name);
         }
     }
 

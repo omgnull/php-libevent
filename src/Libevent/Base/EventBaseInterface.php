@@ -114,4 +114,41 @@ interface EventBaseInterface
      * @return bool
      */
     public function removeEvent($event);
+
+    /**
+     * Removes event from disabled stack and enable it
+     *
+     * @param string|EventInterface $event
+     * @param int $events Only for buffered event required
+     *
+     * @return bool
+     */
+    public function enableEvent($event, $events = null);
+
+    /**
+     * Add event to disabled stack and disable it
+     * It may mey be removed manualy
+     *
+     * @param string|EventInterface $event
+     * @param int $events Required only for buffer event
+     *
+     * @return bool
+     */
+    public function disableEvent($event, $events = null);
+
+    /**
+     * Check if event is disabled
+     *
+     * @param string $name
+     *
+     * @return bool
+     */
+    public function isEventDisabled($name);
+
+    /**
+     * Return the array with disabled events
+     *
+     * @return array
+     */
+    public function getDisabledEvenets();
 }

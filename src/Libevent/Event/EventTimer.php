@@ -53,6 +53,7 @@ class EventTimer extends Event
         if (false === event_timer_add($this->resource, $this->timeout)) {
             throw $this->exception('Could not add timer event (event_timer_add).');
         }
+        $this->base->enableEvent($this->name);
         $this->enabled = true;
 
         return true;
@@ -135,14 +136,20 @@ class EventTimer extends Event
      *
      * @see event_del
      *
+     * @param bool $baseCall To prevent infinite loop
+     *
      * @throws EventException if can't delete event
      *
      * @return bool
      */
-    protected function remove()
+    protected function remove($baseCall)
     {
         if (false === event_timer_del($this->resource)) {
             throw $this->exception('Could not delete event (event_timer_del).');
+        }
+
+        if (false === $baseCall) {
+            $this->base->disableEvent($this->name);
         }
 
         return true;
