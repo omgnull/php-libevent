@@ -9,9 +9,4 @@ matrix:
     allow_failures:
         - php: 5.5
 
-before_install:
-    - sudo apt-get install libevent-1.4-2 libevent-dev
-
-before_script:
-    - pecl install channel://pecl.php.net/libevent-0.0.5
-    - config-add src/Libevent/Tests/php-libevent.ini
+script: src/Libevent/Tests/run-travis.sh
