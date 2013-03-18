@@ -8,4 +8,4 @@ printf "\n" | pecl install channel://pecl.php.net/libevent-0.0.5
 echo "extension=libevent.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
 
 echo "\nstart testing"
-phpunit
+phpunit --coverage-text

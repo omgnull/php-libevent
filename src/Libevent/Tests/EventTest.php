@@ -57,14 +57,14 @@ class EventTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @param EventInterface $event
      * @covers Libevent\Event\Event::remove
      * @depends testEventInit
      */
-    public function testEventDisableAndArgumentLinked()
+    public function testEventDisableAndArgumentLinked(EventInterface $event)
     {
-        $base = new EventBase();
+        $base = $event->getBase();
         $event = new Event($base, 'test_event_enable');
-        $event->enable(1);
         $this->assertFalse($event->enable());
 
         // Test non persist
@@ -203,7 +203,6 @@ class EventTest extends \PHPUnit_Framework_TestCase
     {
         $base = $event->getBase();
         $base->loopBreak();
-        $event->getBase()->loopExit(100000);
     }
 
     /**
