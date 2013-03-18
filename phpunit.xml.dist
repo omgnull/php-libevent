@@ -7,12 +7,13 @@
          convertNoticesToExceptions="true"
          convertWarningsToExceptions="true"
          processIsolation="false"
+         stopOnError="true"
          stopOnFailure="true"
+         stopOnIncomplete="true"
          syntaxCheck="false"
          bootstrap="autoload.php.dist">
 
     <php>
-        <ini name="intl.error_level" value="0"/>
         <ini name="memory_limit" value="-1"/>
     </php>
 
