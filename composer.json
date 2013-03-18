@@ -1,6 +1,5 @@
 {
     "name": "omgnull/php-libevent",
-    "version": "v0.7.1",
     "description": "OOP wrapper for pecl libevent library http://pecl.php.net/package/libevent for php console applications",
     "keywords": ["posix", "pcntl", "libevent", "event", "fork", "buffer", "signal"],
     "type": "library",
