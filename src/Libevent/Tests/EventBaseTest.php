@@ -14,6 +14,7 @@
 
 namespace Libevent\Tests;
 
+use Libevent\Base\EventBaseInterface;
 use Libevent\Base\EventBase;
 use Libevent\Exception\EventException;
 
@@ -51,31 +52,73 @@ class EventBaseTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @depends testDependency
+     *
+     * @return EventBase
      */
     public function testBaseInit()
     {
         $base = new EventBase();
         $this->assertTrue(is_resource($base->getResource()), 'Invalid event base resource.');
+        $this->assertEquals(1, $base->loop());
         $base->free();
 
         return $base;
     }
 
     /**
+     * @param EventBaseInterface $base
      * @depends testBaseInit
-     * @expectedException \Libevent\Exception\EventException
+     *
+     * @return EventBase
      */
-    public function testBaseExceptionOnPrioritySet(EventBase $base)
+    public function testBaseException(EventBaseInterface $base)
+    {
+        $exception = new EventException();
+        $this->assertInstanceOf('Libevent\Exception\EventException', $exception->setBase($base));
+        $this->assertInstanceOf('Libevent\Base\EventBaseInterface', $exception->getBase());
+
+        return $base;
+    }
+
+    /**
+     * @depends testBaseException
+     * @expectedException \PHPUnit_Framework_Error
+     */
+    public function testBaseExceptionOnPrioritySet(EventBaseInterface $base)
     {
         $base->setPriority(EventBase::DEFAULT_PRIORITY);
     }
 
     /**
      * @depends testBaseExceptionOnPrioritySet
-     * @expectedException \Libevent\Exception\EventException
+     * @expectedException \PHPUnit_Framework_Error
      */
     public function testBaseExceptionOnNonIntegerPrioritySet()
     {
         new EventBase('string');
+    }
+
+    /**
+     * @depends testBaseExceptionOnNonIntegerPrioritySet
+     * @expectedException \PHPUnit_Framework_Error
+     */
+    public function testBaseLoopBreak()
+    {
+        $base = new EventBase();
+        $this->assertInstanceOf('Libevent\Base\EventBaseInterface', $base->loopBreak());
+        $base->free();
+        $base->loopBreak();
+    }
+
+    /**
+     * @depends testBaseLoopBreak
+     * @expectedException \PHPUnit_Framework_Error
+     */
+    public function testBaseLoopExit()
+    {
+        $base = new EventBase();
+        $this->assertInstanceOf('Libevent\Base\EventBaseInterface', $base->loopExit());
+        $base->free();
+        $base->loopExit();
     }
 }
