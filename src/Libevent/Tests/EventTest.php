@@ -156,7 +156,7 @@ class EventTest extends \PHPUnit_Framework_TestCase
             ->enable();
 
         $event->disable();
-        $event->getBase()->loop();
+        $base->loop();
 
         return $event;
     }
@@ -203,6 +203,8 @@ class EventTest extends \PHPUnit_Framework_TestCase
     {
         $base = $event->getBase();
         $base->loopBreak();
+        
+        $base->loopExit();
     }
 
     /**
