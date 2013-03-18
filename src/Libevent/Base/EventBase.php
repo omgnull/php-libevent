@@ -118,7 +118,15 @@ class EventBase implements EventBaseInterface
      */
     public function loop($flags = 0)
     {
-        if (-1 === ($status = event_base_loop($this->resource, $flags))) {
+        /**
+         * I do not know how (RETURN_LONG(ret)) but it can return false
+         *
+         * mb:
+         * if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "r|l", &zbase, &flags) != SUCCESS) {
+         *     return;
+         * }
+         */
+        if (-1 === ($status = event_base_loop($this->resource, $flags)) || false === $status) {
             throw $this->exception('Could not start base loop (event_base_loop)');
         }
 
@@ -178,12 +186,8 @@ class EventBase implements EventBaseInterface
      */
     public function setPriority($priority)
     {
-        try {
-            if (false === event_base_priority_init($this->resource, $priority)) {
-                throw new \Exception('Could not set the maximum priority level of the event base (event_base_priority_init)');
-            }
-        } catch (\Exception $e) {
-            throw $this->exception($e->getMessage());
+        if (false === event_base_priority_init($this->resource, $priority)) {
+            throw $this->exception('Could not set the maximum priority level of the event base (event_base_priority_init)');
         }
 
         return $this;

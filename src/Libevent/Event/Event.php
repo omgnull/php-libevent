@@ -51,6 +51,13 @@ class Event implements EventInterface
     protected $enabled      = false;
 
     /**
+     * Prepare event flag
+     *
+     * @var bool
+     */
+    protected $prepared     = false;
+
+    /**
      * Event callback arguments
      *
      * @var array
@@ -78,14 +85,14 @@ class Event implements EventInterface
      *
      * @var integer
      */
-    protected $timeout = -1;
+    protected $timeout      = -1;
 
     /**
      * Event persistent
      *
      * @var bool
      */
-    protected $persist = false;
+    protected $persist      = false;
 
     /**
      * Creates a new event instance
@@ -209,7 +216,7 @@ class Event implements EventInterface
      */
     public function enable($events = null)
     {
-        if ($this->enabled) {
+        if ($this->enabled || !$this->prepared) {
             return false;
         }
 
@@ -280,6 +287,7 @@ class Event implements EventInterface
             $this->base = null;
             $this->arguments = array();
             $this->callback = null;
+            $this->prepared = false;
         }
     }
 
@@ -327,6 +335,7 @@ class Event implements EventInterface
         }
         $this->callback = $callback;
         $this->arguments = $arguments;
+        $this->prepared = true;
         $this->base->registerEvent($this);
 
         return $this;

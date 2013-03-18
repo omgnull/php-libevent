@@ -73,7 +73,7 @@ interface EventInterface
     /**
      * Manually invoke the event callback
      *
-     * @return bool
+     * @return void
      */
     public function invoke();
 

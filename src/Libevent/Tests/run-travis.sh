@@ -1,6 +1,6 @@
 #!/bin/sh
 
-echo "\nstart to buil libevent libs & headers"
+echo "\nstart to build libevent libs & headers"
 sudo apt-get install libevent-1.4.2 libevent-core-1.4-2 libevent-dev
 
 echo "\nstart installing libevent extension"

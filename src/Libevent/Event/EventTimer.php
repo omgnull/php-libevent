@@ -42,7 +42,7 @@ class EventTimer extends Event
      */
     public function enable($events = null)
     {
-        if ($this->enabled) {
+        if ($this->enabled || !$this->prepared) {
             return false;
         }
 
@@ -86,15 +86,16 @@ class EventTimer extends Event
             throw new \InvalidArgumentException('Callback must be callable.');
         }
 
-        $this->arguments = $arguments;
-        $this->callback = $callback;
-        $this->persist = (bool)$persist;
-        $this->base->registerEvent($this);
-        event_timer_set($this->resource, array($this, 'onTimer'));
-
         if (false === event_base_set($this->resource, $this->base->getResource())) {
             throw $this->exception('Could not set event base (event_base_set).');
         }
+
+        $this->arguments = $arguments;
+        $this->callback = $callback;
+        $this->persist = (bool)$persist;
+        $this->prepared = true;
+        $this->base->registerEvent($this);
+        event_timer_set($this->resource, array($this, 'onTimer'));
 
         return $this;
     }
