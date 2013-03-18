@@ -22,3 +22,9 @@ spl_autoload_register(function($classname) {
         require_once __DIR__ . DS . '..' . DS .'src' .DS . $classname . '.php';
     }
 });
+
+/**
+set_error_handler(function($errno, $errstr, $errfile, $errline){
+    throw new \ErrorException($errstr, $errno, 0, $errfile, $errline);
+}, E_ALL);
+//*/
