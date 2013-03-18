@@ -6,6 +6,8 @@ php-libevent
 This is php OOP wrapper for pecl libevent library http://pecl.php.net/package/libevent, used in php cli applications.
 Documentation page: http://pecl.php.net/package/libevent
 
+Not tested on libevent >= v2.*
+
 For php >= 5.4 you can use an Event native classes, also requires libevent library >= 2+:
  * http://docs.php.net/manual/ru/book.event.php
  * http://pecl.php.net/package/event
@@ -14,9 +16,9 @@ For php >= 5.4 you can use an Event native classes, also requires libevent libra
 Requirements:
 -------------
  * php version >= 5.3.*
- * posix extension
+ * libevent library (http://libevent.org/)
  * libevent extension
- * posix extension
+ * posix extension (optional)
 
 
 TODO:
